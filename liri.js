@@ -42,7 +42,7 @@ switch (command) {
 function bandsinTown(parameter) {
     queryURL = "https://rest.bandsintown.com/artists/" + parameter + "/events?app_id=codingbootcamp";
     Axios.get(queryURL).then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         for (var i = 0; i < response.data.length; i++) {
             console.log("Name of Venue: " + response.data[i].venue.name);
             console.log("Venue location: " + response.data[i].venue.city + ", " + response.data[i].venue.country);
@@ -56,7 +56,7 @@ function spotifySearch(parameter) {
     spotify
         .search({ type: 'track', query: parameter })
         .then(response => {
-            console.log(response.tracks.items[3].album );
+            // console.log(response.tracks.items[3].album );
             for (var i =0; i < 5; i++){
             console.log("Artist(s): " + response.tracks.items[i].album.artists[0].name +"\n");
             console.log("Song Name: " + parameter + "\n");
@@ -92,7 +92,7 @@ function doFile() {
         }
 
         var dataArr = data.split(",");
-        console.log(dataArr);
+       
         var indexSpotify = dataArr.indexOf("spotify-this-song");
         var indexMovie = dataArr.indexOf("movie-this");
         var indexBands = dataArr.indexOf("concert-this");

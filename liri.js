@@ -18,13 +18,24 @@ switch (command) {
         bandsinTown(parameter);
         break;
     case "spotify-this-song":
-        spotifySearch(parameter);
+        if (!parameter) {
+            spotifySearch("the sign");
+        }
+        else {
+            spotifySearch(parameter);
+        }
         break;
     case "movie-this":
+        if(!parameter){
+        OMDBSearch("Mr. Nobody");
+        }
+        else {
         OMDBSearch(parameter);
+        }
         break;
     case "do-what-it-says":
         doFile();
+        break;
 
 }
 
@@ -32,9 +43,12 @@ function bandsinTown(parameter) {
     queryURL = "https://rest.bandsintown.com/artists/" + parameter + "/events?app_id=codingbootcamp";
     Axios.get(queryURL).then(response => {
         console.log(response.data);
-        console.log("Name of Venue: " + response.data[9].venue.name);
-        console.log("Venue location: " + response.data[9].venue.city + ", " + response.data[1].venue.country);
-        console.log("Date of the Event: " + moment().format("MM/DD/YYYY", response.data[9].datatime));
+        for (var i = 0; i < response.data.length; i++) {
+            console.log("Name of Venue: " + response.data[i].venue.name);
+            console.log("Venue location: " + response.data[i].venue.city + ", " + response.data[i].venue.country);
+            console.log("Date of the Event: " + moment.utc(response.data[i].datetime).format("MM/DD/YYYY"));
+            console.log("_________________________________________________________________________");
+        }
     });
 };
 
@@ -42,11 +56,15 @@ function spotifySearch(parameter) {
     spotify
         .search({ type: 'track', query: parameter })
         .then(response => {
-            console.log(response.tracks.items[0]);
-            console.log("Artist(s): " + response.tracks.items[0].album.artists.name);
-            console.log("Song Name: " + response.tracks.items[0].album.external_urls.name);
-            // console.log("Link to Spotify: " + response.album.)
-        })
+            console.log(response.tracks.items[3].album );
+            for (var i =0; i < 5; i++){
+            console.log("Artist(s): " + response.tracks.items[i].album.artists[0].name +"\n");
+            console.log("Song Name: " + parameter + "\n");
+            console.log("Album Name: " + response.tracks.items[i].album.name + "\n");
+            console.log("Link to Spotify: " + response.tracks.items[i].album.external_urls.spotify + "\n");
+            console.log("-----------------------------------------------------------");
+        }
+    })
         .catch(err => {
             console.log(err);
         });
@@ -57,11 +75,13 @@ function OMDBSearch(parameter) {
 
     Axios.get(queryURL).then(response => {
         let data = response.data;
-
+        console.log("\n\n");
         console.log("Title of the movie: " + data.Title + "\nYear: " + data.Year + "\nIMDB rating: " +
             data.imdbRating + "\nRotten Tomatoes rating: " + data.Ratings[1].Value + "\nCountry of Production: " +
             data.Country + "\nLanguage: " + data.Language + "\nPlot: " + data.Plot + "\nActors: " + data.Actors);
-
+        
+        
+            console.log("\n\n");
     });
 }
 
@@ -81,13 +101,13 @@ function doFile() {
             spotifySearch(dataArr[indexSpotify + 1]);
         }
 
-        else if (dataArr[indexMovie]){
-    
-        OMDBSearch(dataArr[indexMovie + 1]);
+        else if (dataArr[indexMovie]) {
+
+            OMDBSearch(dataArr[indexMovie + 1]);
         }
-        else if (dataArr[indexBands]){
-        bandsinTown(dataArr[indexBands + 1]);
+        else if (dataArr[indexBands]) {
+            bandsinTown(dataArr[indexBands + 1]);
         }
-    
+
     });
 }
